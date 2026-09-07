@@ -116,6 +116,4 @@ Travel/
 ---
 
 ## 📄 Lisensi & Dokumen
-
-- Spesifikasi lengkap sistem dapat dibaca di [PRD.md](./PRD.md).
 - Dikembangkan untuk operasional **Bendot Open Trip & Travel Nusantara**.
