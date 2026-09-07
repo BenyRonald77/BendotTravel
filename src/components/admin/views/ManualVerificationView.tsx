@@ -13,7 +13,7 @@ import {
 } from 'lucide-react';
 
 export const ManualVerificationView: React.FC = () => {
-  const { bookings, approvePayment, rejectPayment, showToast } = useApp();
+  const { bookings, approvePayment, rejectPayment, showToast, confirm } = useApp();
   const [selectedReceipt, setSelectedReceipt] = useState<string | null>(null);
   const [rejectModalBooking, setRejectModalBooking] = useState<Booking | null>(null);
   const [rejectReason, setRejectReason] = useState('Nominal transfer tidak sesuai dengan total tagihan unik.');
@@ -25,8 +25,24 @@ export const ManualVerificationView: React.FC = () => {
 
   const [activeTab, setActiveTab] = useState<'pending' | 'processed'>('pending');
 
-  const handleApprove = (booking: Booking) => {
-    approvePayment(booking.id, 'Staf Keuangan - Sarah');
+  const handleApprove = async (booking: Booking) => {
+    const confirmed = await confirm({
+      title: 'Verifikasi & Setujui Pembayaran?',
+      message: (
+        <span>
+          Konfirmasi penerimaan pembayaran untuk booking <strong>{booking.bookingCode}</strong> atas nama <strong>{booking.customerName}</strong> sebesar <strong>Rp {booking.finalAmount.toLocaleString('id-ID')}</strong>?
+          <br /><br />
+          Status booking akan diubah menjadi <strong>Terkonfirmasi</strong> dan tiket elektronik otomatis aktif.
+        </span>
+      ),
+      variant: 'info',
+      icon: 'shield',
+      confirmText: 'Ya, Setujui Pembayaran',
+      cancelText: 'Periksa Lagi'
+    });
+    if (confirmed) {
+      approvePayment(booking.id, 'Staf Keuangan - Sarah');
+    }
   };
 
   const handleConfirmReject = () => {

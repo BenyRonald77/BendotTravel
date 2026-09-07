@@ -1,9 +1,9 @@
 import React from 'react';
 import { useApp } from '../../context/AppContext';
-import { ExternalLink, RotateCcw, Bell, ShieldCheck } from 'lucide-react';
+import { ExternalLink, RotateCcw, Bell, ShieldCheck, Sparkles } from 'lucide-react';
 
 export const AdminHeader: React.FC = () => {
-  const { adminTab, setAdminTab, setCurrentView, resetAllData, bookings } = useApp();
+  const { adminTab, setAdminTab, setCurrentView, resetAllData, bookings, confirm, alert, prompt, showToast } = useApp();
 
   const pendingVerificationCount = bookings.filter(
     (b) => b.paymentStatus === 'Menunggu Verifikasi'
@@ -89,6 +89,79 @@ export const AdminHeader: React.FC = () => {
     subtitle: 'Sistem manajemen terpusat'
   };
 
+  const handleResetDemo = async () => {
+    const confirmed = await confirm({
+      title: 'Reset Seluruh Data Demo?',
+      message: (
+        <span>
+          Perhatian: Seluruh penambahan paket wisata, jadwal baru, alokasi pemandu, dan data booking yang tersimpan di browser akan dikembalikan ke data awal.
+          <br /><br />
+          Apakah Anda yakin ingin melanjutkan reset sistem?
+        </span>
+      ),
+      variant: 'warning',
+      icon: 'refresh',
+      confirmText: 'Ya, Reset Data Sekarang',
+      cancelText: 'Batalkan'
+    });
+    if (confirmed) {
+      resetAllData();
+    }
+  };
+
+  const handleTestDialogShowcase = async () => {
+    const choice = await prompt({
+      title: 'Showcase Custom Dialog UI',
+      message: (
+        <span>
+          Pilih tipe dialog yang ingin Anda uji coba (ketik <strong>1</strong>, <strong>2</strong>, <strong>3</strong>, atau <strong>4</strong>):<br />
+          • <strong>1</strong>: Danger Dialog (Hapus Data)<br />
+          • <strong>2</strong>: Warning Dialog (Peringatan Kuota)<br />
+          • <strong>3</strong>: Info Alert (Pemeliharaan Server)<br />
+          • <strong>4</strong>: Success Alert (Sinkronisasi Berhasil)
+        </span>
+      ),
+      defaultValue: '1',
+      placeholder: 'Ketik 1, 2, 3, atau 4',
+      confirmText: 'Tampilkan Dialog'
+    });
+
+    if (choice === '1') {
+      const ok = await confirm({
+        title: 'Hapus Data Destinasi Wisata?',
+        message: 'Tindakan ini akan menghapus paket trip dan dokumentasi terkait secara permanen dari server database.',
+        variant: 'danger',
+        icon: 'trash',
+        confirmText: 'Hapus Permanen',
+        cancelText: 'Batalkan'
+      });
+      if (ok) showToast('Aksi konfirmasi berhasil dieksekusi!', 'success');
+    } else if (choice === '2') {
+      const ok = await confirm({
+        title: 'Perubahan Kuota Maksimal',
+        message: 'Mengubah batas kuota di bawah jumlah peserta yang telah terkonfirmasi dapat membatalkan tiket overbooked.',
+        variant: 'warning',
+        confirmText: 'Lanjutkan Simpan',
+        cancelText: 'Batal'
+      });
+      if (ok) showToast('Perubahan kuota disimpan.', 'info');
+    } else if (choice === '3') {
+      await alert({
+        title: 'Pemeliharaan Server Terjadwal',
+        message: 'Sistem operasional Bendot Travel akan melakukan sinkronisasi manifes lapangan pada pukul 23:00 WIB malam ini.',
+        variant: 'info',
+        confirmText: 'Saya Mengerti'
+      });
+    } else if (choice === '4') {
+      await alert({
+        title: 'Sinkronisasi Selesai!',
+        message: 'Seluruh manifest peserta dan kwitansi invoice digital berhasil diperbarui ke kondisi terkini.',
+        variant: 'success',
+        confirmText: 'Tutup'
+      });
+    }
+  };
+
   return (
     <header className="admin-topbar">
       <div className="admin-page-title-group">
@@ -115,7 +188,17 @@ export const AdminHeader: React.FC = () => {
 
         <button
           className="btn btn-secondary btn-sm"
-          onClick={resetAllData}
+          onClick={handleTestDialogShowcase}
+          title="Uji coba seluruh varian Custom UI Dialog"
+          style={{ borderColor: 'var(--teal-400)', color: 'var(--teal-700)' }}
+        >
+          <Sparkles size={14} />
+          <span>Uji Dialog UI</span>
+        </button>
+
+        <button
+          className="btn btn-secondary btn-sm"
+          onClick={handleResetDemo}
           title="Reset data demo ke kondisi awal"
         >
           <RotateCcw size={14} />

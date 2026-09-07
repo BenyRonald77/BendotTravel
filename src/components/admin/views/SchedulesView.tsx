@@ -13,7 +13,8 @@ export const SchedulesView: React.FC = () => {
     deleteSchedule,
     setAdminTab,
     setSelectedScheduleForManifestId,
-    showToast
+    showToast,
+    confirm
   } = useApp();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -186,8 +187,21 @@ export const SchedulesView: React.FC = () => {
                       <button
                         className="btn btn-secondary btn-sm"
                         style={{ color: '#ef4444' }}
-                        onClick={() => {
-                          if (confirm('Hapus jadwal ini?')) {
+                        onClick={async () => {
+                          const confirmed = await confirm({
+                            title: 'Hapus Jadwal Keberangkatan?',
+                            message: (
+                              <span>
+                                Apakah Anda yakin ingin menghapus jadwal tanggal <strong>{sch.departureDate}</strong> untuk paket <strong>"{trip?.title || 'Trip'}"</strong>?
+                                Penugasan pemandu dan alokasi kuota akan ditiadakan.
+                              </span>
+                            ),
+                            variant: 'danger',
+                            icon: 'trash',
+                            confirmText: 'Ya, Hapus Jadwal',
+                            cancelText: 'Batal'
+                          });
+                          if (confirmed) {
                             deleteSchedule(sch.id);
                           }
                         }}

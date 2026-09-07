@@ -10,6 +10,8 @@ import {
   Transaction,
   Participant
 } from '../types';
+import { useDialog } from './DialogContext';
+import { DialogOptions, PromptOptions } from '../types/dialog';
 import {
   initialTrips,
   initialCategories,
@@ -98,11 +100,19 @@ interface AppContextType {
   toasts: ToastState[];
   showToast: (message: string, type?: 'success' | 'error' | 'info' | 'warning') => void;
   removeToast: (id: number) => void;
+
+  // Modern Dialog System
+  confirm: (options: DialogOptions | string) => Promise<boolean>;
+  alert: (options: DialogOptions | string) => Promise<void>;
+  prompt: (options: PromptOptions | string) => Promise<string | null>;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  // Dialog System
+  const { confirm, alert, prompt } = useDialog();
+
   // LocalStorage loaders
   const loadStored = <T,>(key: string, fallback: T): T => {
     try {
@@ -432,7 +442,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         resetAllData,
         toasts,
         showToast,
-        removeToast
+        removeToast,
+        confirm,
+        alert,
+        prompt
       }}
     >
       {children}

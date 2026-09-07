@@ -4,7 +4,7 @@ import { Trip } from '../../../types';
 import { Plus, Edit2, Trash2, Eye, EyeOff, Check, X, Search } from 'lucide-react';
 
 export const TripCatalogView: React.FC = () => {
-  const { trips, addTrip, updateTrip, deleteTrip, showToast } = useApp();
+  const { trips, addTrip, updateTrip, deleteTrip, showToast, confirm } = useApp();
   const [searchQuery, setSearchQuery] = useState('');
   const [editingTrip, setEditingTrip] = useState<Trip | null>(null);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
@@ -236,8 +236,21 @@ export const TripCatalogView: React.FC = () => {
                     <button
                       className="btn btn-secondary btn-sm"
                       style={{ color: '#ef4444' }}
-                      onClick={() => {
-                        if (confirm(`Hapus paket trip "${trip.title}"?`)) {
+                      onClick={async () => {
+                        const confirmed = await confirm({
+                          title: 'Hapus Paket Wisata?',
+                          message: (
+                            <span>
+                              Apakah Anda yakin ingin menghapus paket <strong>"{trip.title}"</strong> ({trip.code})?
+                              Seluruh jadwal dan rincian paket ini akan dihapus dari katalog.
+                            </span>
+                          ),
+                          variant: 'danger',
+                          icon: 'trash',
+                          confirmText: 'Ya, Hapus Paket',
+                          cancelText: 'Batal'
+                        });
+                        if (confirmed) {
                           deleteTrip(trip.id);
                         }
                       }}

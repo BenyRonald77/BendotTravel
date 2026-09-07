@@ -23,7 +23,7 @@ interface BookingModalProps {
 }
 
 export const BookingModal: React.FC<BookingModalProps> = ({ trip, onClose }) => {
-  const { schedules, addBooking, setBookingSuccessData, showToast } = useApp();
+  const { schedules, addBooking, setBookingSuccessData, showToast, confirm } = useApp();
 
   const availableSchedules = schedules.filter(
     (s) => s.tripId === trip.id && s.status !== 'Cancelled' && s.quotaTotal - s.quotaBooked > 0
@@ -84,9 +84,39 @@ export const BookingModal: React.FC<BookingModalProps> = ({ trip, onClose }) => 
     ]);
   };
 
-  const handleRemoveParticipant = (id: string) => {
+  const handleRemoveParticipant = async (id: string, name?: string) => {
     if (participants.length <= 1) return;
+    if (name && name.trim()) {
+      const confirmed = await confirm({
+        title: 'Hapus Peserta?',
+        message: `Hapus peserta "${name}" dari daftar formulir pemesanan ini?`,
+        variant: 'danger',
+        icon: 'trash',
+        confirmText: 'Ya, Hapus',
+        cancelText: 'Batal'
+      });
+      if (!confirmed) return;
+    }
     setParticipants((prev) => prev.filter((p) => p.id !== id));
+  };
+
+  const handleAttemptClose = async () => {
+    const hasData = customerName.trim() || customerPhone.trim() || participants.some((p) => p.name.trim());
+    if (hasData) {
+      const confirmed = await confirm({
+        title: 'Batalkan Pengisian Pemesanan?',
+        message: 'Data nama dan peserta yang telah Anda isi akan hilang jika formulir ditutup sekarang.',
+        variant: 'warning',
+        icon: 'alert',
+        confirmText: 'Ya, Tinggalkan Formulir',
+        cancelText: 'Lanjutkan Pemesanan'
+      });
+      if (confirmed) {
+        onClose();
+      }
+    } else {
+      onClose();
+    }
   };
 
   const handleParticipantChange = (id: string, field: keyof Participant, value: any) => {
@@ -185,7 +215,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({ trip, onClose }) => 
   };
 
   return (
-    <div className="modal-overlay" onClick={onClose}>
+    <div className="modal-overlay" onClick={handleAttemptClose}>
       <div
         className="modal-content"
         style={{ maxWidth: '720px' }}
@@ -199,7 +229,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({ trip, onClose }) => 
             </span>
             <h3 className="modal-title">{trip.title}</h3>
           </div>
-          <button onClick={onClose} className="modal-close-btn" aria-label="Tutup">
+          <button onClick={handleAttemptClose} className="modal-close-btn" aria-label="Tutup">
             <X size={20} />
           </button>
         </div>
@@ -352,7 +382,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({ trip, onClose }) => 
                       {participants.length > 1 && (
                         <button
                           type="button"
-                          onClick={() => handleRemoveParticipant(p.id)}
+                          onClick={() => handleRemoveParticipant(p.id, p.name)}
                           style={{ color: '#ef4444', padding: '4px' }}
                           title="Hapus peserta"
                         >
@@ -615,7 +645,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({ trip, onClose }) => 
               <span>Kembali</span>
             </button>
           ) : (
-            <button className="btn btn-secondary" onClick={onClose}>
+            <button className="btn btn-secondary" onClick={handleAttemptClose}>
               Batal
             </button>
           )}

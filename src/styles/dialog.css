@@ -1,0 +1,382 @@
+/* ==========================================================================
+   CUSTOM UI DIALOG SYSTEM - MODERN AESTHETICS (VANILLA CSS)
+   ========================================================================== */
+
+.dialog-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 100000;
+  background-color: rgba(11, 17, 32, 0.72);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  animation: dialogFadeIn 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.dialog-card {
+  position: relative;
+  max-width: 480px;
+  width: 100%;
+  background: #ffffff;
+  border-radius: 22px;
+  box-shadow: 
+    0 25px 60px -15px rgba(0, 0, 0, 0.35),
+    0 0 0 1px rgba(255, 255, 255, 0.6) inset,
+    0 0 0 1px rgba(226, 232, 240, 0.9);
+  padding: 26px 24px 22px;
+  animation: dialogScaleIn 0.26s cubic-bezier(0.34, 1.45, 0.64, 1) forwards;
+  overflow: hidden;
+}
+
+/* Subtle top glow bar based on variant */
+.dialog-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  border-top-left-radius: 22px;
+  border-top-right-radius: 22px;
+}
+
+.dialog-card.dialog-danger::before {
+  background: linear-gradient(90deg, #ef4444, #f87171);
+}
+.dialog-card.dialog-warning::before {
+  background: linear-gradient(90deg, #f59e0b, #fbbf24);
+}
+.dialog-card.dialog-info::before {
+  background: linear-gradient(90deg, #0ea5e9, #38bdf8);
+}
+.dialog-card.dialog-success::before {
+  background: linear-gradient(90deg, #10b981, #34d399);
+}
+.dialog-card.dialog-primary::before {
+  background: linear-gradient(90deg, #10b981, #14b8a6);
+}
+
+/* Close Button */
+.dialog-close-btn {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #f1f5f9;
+  border: 1px solid rgba(203, 213, 225, 0.6);
+  color: #64748b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  z-index: 2;
+}
+
+.dialog-close-btn:hover {
+  background: #e2e8f0;
+  color: #0f172a;
+  transform: scale(1.06);
+}
+
+/* Layout */
+.dialog-body-layout {
+  display: flex;
+  gap: 18px;
+  align-items: flex-start;
+}
+
+/* Glowing Icon Halo Badge */
+.dialog-icon-badge {
+  position: relative;
+  flex-shrink: 0;
+  width: 52px;
+  height: 52px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 2px;
+}
+
+.dialog-icon-inner {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dialog-icon-badge.danger {
+  background: #fef2f2;
+  color: #ef4444;
+  border: 1px solid #fee2e2;
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.15);
+}
+.dialog-icon-badge.danger .dialog-icon-halo {
+  position: absolute;
+  inset: -3px;
+  border-radius: 19px;
+  background: rgba(239, 68, 68, 0.2);
+  animation: dialogHaloPulse 2s infinite ease-in-out;
+  z-index: 0;
+}
+
+.dialog-icon-badge.warning {
+  background: #fffbeb;
+  color: #d97706;
+  border: 1px solid #fef3c7;
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.15);
+}
+.dialog-icon-badge.warning .dialog-icon-halo {
+  position: absolute;
+  inset: -3px;
+  border-radius: 19px;
+  background: rgba(245, 158, 11, 0.2);
+  animation: dialogHaloPulse 2s infinite ease-in-out;
+  z-index: 0;
+}
+
+.dialog-icon-badge.info {
+  background: #f0f9ff;
+  color: #0284c7;
+  border: 1px solid #e0f2fe;
+  box-shadow: 0 4px 12px rgba(14, 165, 233, 0.15);
+}
+.dialog-icon-badge.info .dialog-icon-halo {
+  position: absolute;
+  inset: -3px;
+  border-radius: 19px;
+  background: rgba(14, 165, 233, 0.2);
+  animation: dialogHaloPulse 2s infinite ease-in-out;
+  z-index: 0;
+}
+
+.dialog-icon-badge.success {
+  background: #ecfdf5;
+  color: #059669;
+  border: 1px solid #d1fae5;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.15);
+}
+.dialog-icon-badge.success .dialog-icon-halo {
+  position: absolute;
+  inset: -3px;
+  border-radius: 19px;
+  background: rgba(16, 185, 129, 0.2);
+  animation: dialogHaloPulse 2s infinite ease-in-out;
+  z-index: 0;
+}
+
+.dialog-icon-badge.primary {
+  background: #f0fdfa;
+  color: #0d9488;
+  border: 1px solid #ccfbf1;
+  box-shadow: 0 4px 12px rgba(20, 184, 166, 0.15);
+}
+.dialog-icon-badge.primary .dialog-icon-halo {
+  position: absolute;
+  inset: -3px;
+  border-radius: 19px;
+  background: rgba(20, 184, 166, 0.2);
+  animation: dialogHaloPulse 2s infinite ease-in-out;
+  z-index: 0;
+}
+
+/* Content Area */
+.dialog-content-area {
+  flex: 1;
+  min-width: 0;
+}
+
+.dialog-title {
+  font-family: var(--font-heading);
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin-bottom: 6px;
+  letter-spacing: -0.01em;
+  padding-right: 24px;
+}
+
+.dialog-message {
+  font-size: 0.915rem;
+  color: #475569;
+  line-height: 1.55;
+  word-break: break-word;
+}
+
+.dialog-message strong {
+  color: #0f172a;
+  font-weight: 700;
+}
+
+/* Input Prompt Area */
+.dialog-input-wrap {
+  margin-top: 14px;
+}
+
+.dialog-input-label {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #334155;
+  margin-bottom: 6px;
+}
+
+.dialog-input {
+  width: 100%;
+  padding: 10px 14px;
+  font-size: 0.9rem;
+  font-family: var(--font-sans);
+  border: 1.5px solid #cbd5e1;
+  border-radius: 10px;
+  background: #f8fafc;
+  color: #0f172a;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.dialog-input:focus {
+  background: #ffffff;
+  border-color: var(--primary-500);
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.18);
+}
+
+.dialog-textarea {
+  resize: vertical;
+  min-height: 70px;
+}
+
+/* Footer Buttons */
+.dialog-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 24px;
+  padding-top: 14px;
+  border-top: 1px solid #f1f5f9;
+}
+
+.dialog-btn-cancel {
+  padding: 10px 18px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #475569;
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+.dialog-btn-cancel:hover {
+  background: #e2e8f0;
+  color: #0f172a;
+}
+
+.dialog-btn-confirm {
+  padding: 10px 22px;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #ffffff;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.dialog-btn-confirm:hover {
+  transform: translateY(-1px);
+}
+
+.dialog-btn-confirm:active {
+  transform: translateY(1px);
+}
+
+/* Variant Buttons */
+.dialog-btn-danger {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  box-shadow: 0 4px 14px rgba(239, 68, 68, 0.3);
+}
+.dialog-btn-danger:hover {
+  background: linear-gradient(135deg, #dc2626, #b91c1c);
+  box-shadow: 0 6px 18px rgba(239, 68, 68, 0.4);
+}
+
+.dialog-btn-warning {
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  box-shadow: 0 4px 14px rgba(245, 158, 11, 0.3);
+}
+.dialog-btn-warning:hover {
+  background: linear-gradient(135deg, #d97706, #b45309);
+  box-shadow: 0 6px 18px rgba(245, 158, 11, 0.4);
+}
+
+.dialog-btn-info {
+  background: linear-gradient(135deg, #0ea5e9, #0284c7);
+  box-shadow: 0 4px 14px rgba(14, 165, 233, 0.3);
+}
+.dialog-btn-info:hover {
+  background: linear-gradient(135deg, #0284c7, #0369a1);
+  box-shadow: 0 6px 18px rgba(14, 165, 233, 0.4);
+}
+
+.dialog-btn-success {
+  background: linear-gradient(135deg, #10b981, #059669);
+  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.3);
+}
+.dialog-btn-success:hover {
+  background: linear-gradient(135deg, #059669, #047857);
+  box-shadow: 0 6px 18px rgba(16, 185, 129, 0.4);
+}
+
+.dialog-btn-primary {
+  background: linear-gradient(135deg, #10b981, #0d9488);
+  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.3);
+}
+.dialog-btn-primary:hover {
+  background: linear-gradient(135deg, #059669, #0f766e);
+  box-shadow: 0 6px 18px rgba(16, 185, 129, 0.4);
+}
+
+/* Keyframe Animations */
+@keyframes dialogFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes dialogScaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.92) translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes dialogHaloPulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.6;
+  }
+  50% {
+    transform: scale(1.18);
+    opacity: 0;
+  }
+}
